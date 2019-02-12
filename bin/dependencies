@@ -1,0 +1,64 @@
+#!/usr/bin/env node 
+
+const Usage = `
+    Inspect cached dependency data and print a file's dependencies.
+
+    Usage:
+
+        dependencies [-d <dependency file>] <path>
+`;
+
+function usage() {
+    console.error( Usage );
+    process.exit( 1 );
+}
+
+if( process.argv.length < 3 ) {
+    usage();
+}
+
+let [ depFile, ...args ] = process.argv.slice( 2 );
+
+let path;
+
+if( args[0] == '-d' ) {
+    if( args.length == 3 ) {
+        depFile = args[1];
+        path = args[2];
+    }
+    else usage();
+}
+else if( args.length == 1 ) {
+    path = args[0];
+}
+
+const { Dependencies } = require('../lib/dependencies-sqlite');
+
+async function run() {
+    try {
+        let deps = new Dependencies( depFile );
+        console.error('Loading dependencies from %s...', depFile );
+        let loaded = await deps.load();
+        if( loaded ) {
+            let paths;
+            if( path ) {
+                paths = [ path ];
+            }
+            else {
+                paths = await deps.getDependentPaths();
+            }
+            for( let path of paths ) {
+                console.log('>', path );
+                let deps = await deps.getDependencies( path );
+                deps.forEach( d => console.log('  + %s', d ) );
+            }
+        }
+        else console.error('Failed to load dependencies');
+    }
+    catch( e ) {
+        console.error( e );
+    }
+}
+
+run();
+

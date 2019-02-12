@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+
+const Usage = `
+  Build or serve a website.
+
+  Usage:
+
+      heckle ( build | serve ) [ <source> <target> ] [options] [file list]
+
+  Options:
+
+  [ -x <module> | --extensions <module> ]
+
+      Specify the path(s) or name(s) of extension module(s); multiple names 
+      or paths can be specified, separated by commas.
+
+      Additional extension modules can also be specified via the HECKLE_EXTS
+      environment variable.
+
+  [ -s | --site-mode ]
+
+      Run in site mode. Allows the command to be run within a site's source
+      directory, and outputs the result to a directory named _site under the
+      current location.
+ 
+  [ -c | --config ]
+
+      The path to an alternative site configuration file (default is _config.yml
+      in the source directory).
+
+  [ -n | --no-dependency-tracking ]
+
+      Disable dependency tracking.
+
+`;
+
+const Path = require('path');
+const { build, serve, extensions } = require('../index');
+
+// Check environment for extension modules.
+extensions.add( process.env.HECKLE_EXTS );
+
+// Process command line.
+let argv = process.argv.slice( 2 );
+let command = argv.shift();
+
+let argOrder = ['source','target'];
+let opts = {}, args = {}, files;
+
+while( argv.length ) {
+    let arg = argv.shift();
+    switch( arg ) {
+        case '-x':
+        case '--extensions':
+            extensions.add( argv.shift() );
+            break;
+        case '-s':
+        case '--site-mode':
+            args.source = '.';
+            args.target = '_site';
+            argOrder = [];
+            break;
+        case '-c':
+        case '--config':
+            opts.configPath = argv.shift();
+            break;
+        case '-n':
+        case '--no-dependency-tracking':
+            opts.noDependencyTracking = true;
+            break;
+        default:
+            if( argOrder.length ) {
+                args[argOrder.shift()] = arg;
+            }
+            else {
+                if( files === undefined ) {
+                    files = [];
+                }
+                files.push( arg );
+            }
+    }
+}
+
+let { source, target } = args;
+if( !(source && target) ) {
+    console.log('Please provide source and target');
+    console.log( Usage );
+    process.exit( 1 );
+}
+
+let exts = extensions.get();
+
+async function run() {
+    try {
+        switch( command ) {
+            case 'build':
+                let {
+                    error,
+                    elapsedTime,
+                    peakHeapTotal
+                } = await build( source, target, opts, exts, files );
+                if( error ) {
+                    throw error;
+                }
+                console.log('Build took %ds', elapsedTime / 1000 );
+                console.log('Heap usage: %sM', peakHeapTotal / (1024 * 1024));
+                process.exit( 0 );
+                break;
+            case 'serve':
+                // Add flag to indicate that we're running in server mode.
+                opts.serverMode = true;
+                // Build and serve.
+                await build( source, target, opts, exts );
+                await serve( source, target, opts, exts );
+                break;
+            default:
+                console.log(`Bad command: ${command}`);
+                console.log( Usage );
+                process.exit( 1 );
+        }
+    }
+    catch( e ) {
+        console.error( e );
+        process.exit( 1 );
+    }
+}
+
+run();
+
