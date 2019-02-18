@@ -37,9 +37,6 @@ const Usage = `
 const Path = require('path');
 const { build, serve, extensions } = require('../index');
 
-// Check environment for extension modules.
-extensions.add( process.env.HECKLE_EXTS );
-
 // Process command line.
 let argv = process.argv.slice( 2 );
 let command = argv.shift();
