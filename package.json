@@ -3,7 +3,6 @@
     "version": "0.7.0",
     "dependencies": {
         "@locomote.sh/utils": "git+https://github.com/locomote-sh/utils.git",
-        "bluebird": "^2.1.3",
         "chokidar": "^2.0.4",
         "express": "^4.0.0",
         "front-matter": "^2.3.0",
