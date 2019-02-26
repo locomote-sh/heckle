@@ -38,14 +38,14 @@ const Path = require('path');
 const { build, serve, extensions } = require('../index');
 
 // Process command line.
-let argv = process.argv.slice( 2 );
-let command = argv.shift();
+const argv = process.argv.slice( 2 );
 
-let argOrder = ['source','target'];
-let opts = {}, args = {}, files;
+const argOrder = ['command','source','target'];
+const opts = {}, args = {};
+let files;
 
 while( argv.length ) {
-    let arg = argv.shift();
+    const arg = argv.shift();
     switch( arg ) {
         case '-x':
         case '--extensions':
@@ -65,6 +65,14 @@ while( argv.length ) {
         case '--no-dependency-tracking':
             opts.noDependencyTracking = true;
             break;
+        case '-h':
+        case '--help':
+            opts.printUsage = true;
+            break;
+        case '-v':
+        case '--version':
+            opts.printVersion = true;
+            break;
         default:
             if( argOrder.length ) {
                 args[argOrder.shift()] = arg;
@@ -78,20 +86,32 @@ while( argv.length ) {
     }
 }
 
-let { source, target } = args;
-if( !(source && target) ) {
-    console.log('Please provide source and target');
+const { printVersion, printUsage } = opts;
+if( printVersion ) {
+    const { version } = require('../package.json');
+    console.log( version );
+    process.exit( 0 );
+}
+
+if( printUsage ) {
+    console.log( Usage );
+    process.exit( 0 );
+}
+
+const { command, source, target } = args;
+if( !(command && source && target) ) {
+    console.log('Please provide command, source and target');
     console.log( Usage );
     process.exit( 1 );
 }
 
-let exts = extensions.get();
+const exts = extensions.get();
 
 async function run() {
     try {
         switch( command ) {
             case 'build':
-                let {
+                const {
                     error,
                     elapsedTime,
                     peakHeapTotal
