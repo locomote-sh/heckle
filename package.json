@@ -1,6 +1,11 @@
 {
     "name": "@locomote.sh/heckle",
     "version": "0.8.0",
+    "directories": {
+        "lib": "lib",
+        "bin": "bin",
+        "test": "test"
+    },
     "dependencies": {
         "@locomote.sh/utils": "git+https://github.com/locomote-sh/utils.git",
         "chokidar": "^2.0.4",
