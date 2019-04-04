@@ -4,7 +4,22 @@ A Node.js based alternative to Jeckle.
 
 # Installation
 
-Ensure that `./bin/heckle` is on your path and that `npm install` has been run.
+Install using _npm_:
+
+```
+npm install "@locomote.sh/heckle"
+```
+
+You can then run the _heckle_ command using _npx_:
+
+```
+npx heckle
+```
+
+# Status
+
+_Heckle_ is currently very much beta software;
+It does work and will build a website, but there are known bugs and problems, particularly with page dependency tracking.
 
 # Usage
 
@@ -12,7 +27,7 @@ Ensure that `./bin/heckle` is on your path and that `npm install` has been run.
 Generate a site's HTML and copy assets and other resources by running the following command:
 
 ```
-    heckle build <source> <target> [options module]
+    npx heckle build <source> <target> [options module]
 ```
 Where:
 * `source` is the location containing the site source files.
@@ -23,7 +38,7 @@ Where:
 The following command allows a built site to be served locally by running a web server process listening on port 3000 of localhost:
 
 ```
-    heckle serve <source> <target>
+    npx heckle serve <source> <target>
 ```
 
 Where _source_ and _target_ are the same as for the build command.
