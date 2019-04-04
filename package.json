@@ -1,7 +1,8 @@
 {
     "name": "@locomote.sh/heckle",
     "description": "Node.js based alternative to Jekyll",
-    "version": "0.8.2",
+    "keywords": "jekyll node javascript",
+    "version": "0.8.3",
     "directories": {
         "lib": "lib",
         "bin": "bin",
