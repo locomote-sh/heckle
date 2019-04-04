@@ -55,7 +55,7 @@ while( argv.length ) {
         case '--site-mode':
             args.source = '.';
             args.target = '_site';
-            argOrder = [];
+            argOrder.length = 0;
             break;
         case '-c':
         case '--config':
