@@ -1,6 +1,6 @@
-const { build, loadSiteConfig } = require('./lib/build');
-exports.build = build;
-exports.loadSiteConfig = loadSiteConfig;
+Object.assign( exports, require('./lib/build') );
 
 exports.serve = require('./lib/serve').serve;
 exports.extensions = require('./lib/extensions');
+
+Object.assign( exports, require('./lib/skeleton-tag') );
