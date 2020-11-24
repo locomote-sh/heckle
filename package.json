@@ -14,7 +14,7 @@
         "chokidar": "^2.0.4",
         "express": "^4.0.0",
         "front-matter": "^2.3.0",
-        "highlight.js": "^9.12.0",
+        "highlight.js": "^10.1.2",
         "js-yaml": "^3.13.1",
         "line-reader": "^0.4.0",
         "liquid-node": "git+https://github.com/innerfunction/liquid-node.git",
