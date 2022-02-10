@@ -20,6 +20,6 @@
         "liquid-node": "git+https://github.com/innerfunction/liquid-node.git",
         "markdown-it": "^8.4.2",
         "minimatch": "^3.0.4",
-        "node-sass": "^4.12.0"
+        "node-sass": "^7.0.0"
     }
 }
